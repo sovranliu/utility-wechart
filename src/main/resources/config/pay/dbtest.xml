@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<db>
+    <db type="mysql" ip="127.0.0.1" port="3306" name="angel" />
+    <user name="root" password="123456" />
+    <config autoreconnect="true" initialpoolsize="2" maxPoolSize="5" minPoolSize="1" maxStatements="10" maxIdleTime="10000" />
+</db>
