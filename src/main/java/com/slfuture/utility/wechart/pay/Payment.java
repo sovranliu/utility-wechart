@@ -273,6 +273,30 @@ public class Payment {
     }
 
     /**
+     * 送红包
+     *
+     * @param openId 用户开放ID
+     * @param amount 金额
+     * @param ip 客户IP
+     * @return 送红包结果
+     */
+    public static boolean sendRedPacket(String openId, int amount, String ip) throws Exception {
+        String trade = generateTradeNo(0);
+        RedPacketRequest request = RedPacketRequest.build(trade, openId, amount, ip);
+        logger.info("Prptocol:redpacket send = \n" + request);
+        RedPacketResponse response = Communicator.sendRedPacket(request);
+        logger.info("Prptocol:redpacket receive = \n" + response);
+        if("SUCCESS".equalsIgnoreCase(response.resultCode) && "SUCCESS".equalsIgnoreCase(response.resultCode)) {
+            DB.executor().alter("INSERT INTO Pay_RedPacket (OpenID, Amount, Status, AddTime, UpdateTime) VALUES ('" + openId + "', " + amount + ", 1, NOW(), NOW())");
+            return false;
+        }
+        else {
+            DB.executor().alter("INSERT INTO Pay_RedPacket (OpenID, Amount, Status, AddTime, UpdateTime) VALUES ('" + openId + "', " + amount + ", 0, NOW(), NOW())");
+            return true;
+        }
+    }
+
+    /**
      * 生成交易流水号
      *
      * @param productId 产品ID

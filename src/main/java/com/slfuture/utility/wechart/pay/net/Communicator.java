@@ -16,13 +16,17 @@ public class Communicator {
      */
     public final static String URL_UNIFIEDORDER = "https://api.mch.weixin.qq.com/pay/unifiedorder";
     /**
-     * 统一下单
+     * 退款
      */
     public final static String URL_REFUND = "https://api.mch.weixin.qq.com/secapi/pay/refund";
     /**
-     * 统一下单
+     * 转款
      */
     public final static String URL_TRANSFERS = "https://api.mch.weixin.qq.com/mmpaymkttransfers/promotion/transfers";
+    /**
+     * 投递红包
+     */
+    public final static String URL_SENDREDPACKET = "https://api.mch.weixin.qq.com/mmpaymkttransfers/sendredpack";
 
 
     /**
@@ -82,5 +86,23 @@ public class Communicator {
             throw new IOException("parse data failed in transfer:" + response);
         }
         return TransferResponse.parse(xml);
+    }
+
+    /**
+     * 送红包
+     *
+     * @param request 红包请求
+     * @return 红包反馈
+     */
+    public static RedPacketResponse sendRedPacket(RedPacketRequest request) throws IOException {
+        String response = XMLHttpsUtil.post(URL_SENDREDPACKET, request.toString());
+        if(Text.isBlank(response)) {
+            throw new IOException("receive empty data in sendredpacket");
+        }
+        XMLNode xml = XMLNode.convert(response);
+        if(null == xml) {
+            throw new IOException("parse data failed in sendredpacket:" + response);
+        }
+        return RedPacketResponse.parse(xml);
     }
 }
